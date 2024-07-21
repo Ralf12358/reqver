@@ -33,8 +33,7 @@ class TestReqver(unittest.TestCase):
             with open('requirements.txt', 'r') as f:
                 content = f.read()
                 self.assertIn('click==', content)
-                current_pip_version = get_package_version('pip')
-                self.assertIn(f'pip=={current_pip_version}', content)
+                self.assertIn('pip==21.1.3', content)  # Expect old version
 
     def test_reqver_with_file(self):
         runner = CliRunner()
@@ -45,8 +44,7 @@ class TestReqver(unittest.TestCase):
         with open(Path(self.test_dir) / 'testdata' / 'requirements.txt', 'r') as f:
             content = f.read()
             self.assertIn('click==', content)
-            current_pip_version = get_package_version('pip')
-            self.assertIn(f'pip=={current_pip_version}', content)
+            self.assertIn('pip==21.1.3', content)  # Expect old version
 
     def test_reqver_force(self):
         runner = CliRunner()
@@ -57,7 +55,8 @@ class TestReqver(unittest.TestCase):
         with open(Path(self.test_dir) / 'testdata' / 'requirements.txt', 'r') as f:
             content = f.read()
             self.assertIn('click==', content)
-            self.assertIn('pip==', content)  # pip version should be updated
+            current_pip_version = get_package_version('pip')
+            self.assertIn(f'pip=={current_pip_version}', content)  # Expect current version
 
     def test_reqver_no_backups(self):
         runner = CliRunner()
