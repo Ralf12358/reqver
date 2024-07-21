@@ -8,7 +8,7 @@ setup(
     description='A tool to add version information to requirements.txt files',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
-    url='https://github.com/ralfschneider/reqver',
+    url='https://github.com/Ralf12358/reqver',
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
@@ -35,7 +35,7 @@ setup(
     keywords='requirements version pip',
     python_requires='>=3.6',
     project_urls={
-        'Bug Reports': 'https://github.com/ralfschneider/reqver/issues',
-        'Source': 'https://github.com/ralfschneider/reqver/',
+        'Bug Reports': 'https://github.com/Ralf12358/reqver/issues',
+        'Source': 'https://github.com/Ralf12358/reqver/',
     },
 )
