@@ -39,7 +39,7 @@ def process_requirements_file(file_path, force=False, no_backups=False):
             old_version = re.split('[=<>]', req)[1] if '==' in req else None
             version = get_package_version(package_name)
             if version:
-                if force or old_version is None or version != old_version:
+                if old_version is None or (force and version != old_version):
                     updated_requirements.append(f"{package_name}=={version}\n")
                     changes_made = True
                     if old_version:
