@@ -7,16 +7,17 @@ from reqver.cli import main, get_package_version
 
 class TestReqver(unittest.TestCase):
     def setUp(self):
-        # Create a temporary directory
-        self.test_dir = tempfile.mkdtemp()
-
         # Set up the CLI runner
         self.runner = CliRunner()
 
         # Set up the testdata directory path
         self.testdata_dir = Path(__file__).parent / 'testdata'
 
+
     def copy_testdata(self):
+        # Create a temporary directory
+        self.test_dir = tempfile.mkdtemp()
+
         # Copy the testdata to the temporary directory
         shutil.copytree(self.testdata_dir, self.test_dir, dirs_exist_ok=True)
 
