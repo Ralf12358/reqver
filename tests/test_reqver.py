@@ -65,5 +65,24 @@ class TestReqver(unittest.TestCase):
         # Check if backup file was not created
         self.assertFalse(os.path.exists(Path(self.test_dir) / 'testdata' / 'requirements.txt.bak'))
 
+    def test_reqver_force_update_existing_version(self):
+        runner = CliRunner()
+        # First, ensure there's a version for pip in the requirements file
+        result = runner.invoke(main, [str(Path(self.test_dir) / 'testdata' / 'requirements.txt')])
+        self.assertEqual(result.exit_code, 0)
+
+        # Now, run with --force
+        result = runner.invoke(main, ['--force', str(Path(self.test_dir) / 'testdata' / 'requirements.txt')])
+        self.assertEqual(result.exit_code, 0)
+        
+        # Check if the file was updated and pip version changed
+        with open(Path(self.test_dir) / 'testdata' / 'requirements.txt', 'r') as f:
+            content = f.read()
+            self.assertIn('pip==', content)
+            self.assertNotIn('pip==21.1.3', content)  # Assuming pip version has changed
+
+        # Check if the output mentions updating pip
+        self.assertIn('pip:', result.output)
+
 if __name__ == '__main__':
     unittest.main()
