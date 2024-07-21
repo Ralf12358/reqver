@@ -1,7 +1,6 @@
 import unittest
 import tempfile
 import shutil
-import os
 from pathlib import Path
 from click.testing import CliRunner
 from reqver.cli import main, get_package_version
@@ -33,7 +32,7 @@ class TestReqver(unittest.TestCase):
         self.assertIn("Updated", result.output)
 
         # Check if backup file was created
-        self.assertTrue(os.path.exists(Path(self.test_dir) / 'requirements.txt.bak'))
+        self.assertTrue((Path(self.test_dir) / 'requirements.txt.bak').exists())
 
         # Check if versions were updated
         with open(Path(self.test_dir) / 'requirements.txt', 'r') as f:
@@ -62,7 +61,7 @@ class TestReqver(unittest.TestCase):
         self.assertIn("Updated", result.output)
 
         # Check that no backup file was created
-        self.assertFalse(os.path.exists(Path(self.test_dir) / 'requirements.txt.bak'))
+        self.assertFalse((Path(self.test_dir) / 'requirements.txt.bak').exists())
 
         # Check if versions were updated correctly
         with open(Path(self.test_dir) / 'requirements.txt', 'r') as f:
@@ -74,7 +73,7 @@ class TestReqver(unittest.TestCase):
         # Run the command again to ensure no backup is created on subsequent runs
         result = self.runner.invoke(main, ['--no-backups', str(Path(self.test_dir) / 'requirements.txt')])
         self.assertEqual(result.exit_code, 0)
-        self.assertFalse(os.path.exists(Path(self.test_dir) / 'requirements.txt.bak'))
+        self.assertFalse((Path(self.test_dir) / 'requirements.txt.bak').exists())
 
     def test_multiple_files(self):
         # Create a second requirements file
