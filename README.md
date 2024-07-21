@@ -13,7 +13,7 @@ For more information, please refer to the documentation.
 
 [![PyPI version](https://badge.fury.io/py/reqver.svg)](https://badge.fury.io/py/reqver)
 
-**Latest version: 0.1.6**
+**Latest version: 0.1.7**
 
 A command-line tool to add version information to requirements.txt files.
 
