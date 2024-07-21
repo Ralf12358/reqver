@@ -4,7 +4,7 @@ import shutil
 import os
 from pathlib import Path
 from click.testing import CliRunner
-from reqver.cli import main
+from reqver.cli import main, get_package_version
 
 class TestReqver(unittest.TestCase):
     def setUp(self):
@@ -34,9 +34,9 @@ class TestReqver(unittest.TestCase):
         # Check if versions were updated
         with open(Path(self.test_dir) / 'requirements.txt', 'r') as f:
             content = f.read()
-            self.assertRegex(content, r'click==\d+\.\d+\.\d+')
+            self.assertIn(f'click>={get_package_version("click")}', content)
             self.assertIn('pip==21.1.3', content)  # This should not change without --force
-            self.assertRegex(content, r'packaging==\d+\.\d+\.\d+')
+            self.assertIn(f'packaging=={get_package_version("packaging")}', content)
 
     def test_force_option(self):
         result = self.runner.invoke(main, ['--force', str(Path(self.test_dir) / 'requirements.txt')])
@@ -47,9 +47,9 @@ class TestReqver(unittest.TestCase):
         # Check if versions were updated, including pip
         with open(Path(self.test_dir) / 'requirements.txt', 'r') as f:
             content = f.read()
-            self.assertRegex(content, r'click==\d+\.\d+\.\d+')
-            self.assertRegex(content, r'pip==\d+\.\d+\.\d+')
-            self.assertRegex(content, r'packaging==\d+\.\d+\.\d+')
+            self.assertIn(f'click=={get_package_version("click")}', content)
+            self.assertIn(f'pip=={get_package_version("pip")}', content)
+            self.assertIn(f'packaging=={get_package_version("packaging")}', content)
 
     def test_no_backups_option(self):
         result = self.runner.invoke(main, ['--no-backups', str(Path(self.test_dir) / 'requirements.txt')])
@@ -59,6 +59,13 @@ class TestReqver(unittest.TestCase):
 
         # Check that no backup file was created
         self.assertFalse(os.path.exists(Path(self.test_dir) / 'requirements.txt.bak'))
+
+        # Check if versions were updated correctly
+        with open(Path(self.test_dir) / 'requirements.txt', 'r') as f:
+            content = f.read()
+            self.assertIn(f'click>={get_package_version("click")}', content)
+            self.assertIn('pip==21.1.3', content)  # This should not change without --force
+            self.assertIn(f'packaging=={get_package_version("packaging")}', content)
 
     def test_multiple_files(self):
         # Create a second requirements file
