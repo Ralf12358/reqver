@@ -26,18 +26,26 @@ def get_package_version(package_name):
     return None
 
 def process_requirements_file(file_path, force=False, no_backups=False):
+    click.echo(f"Processing {file_path}...")
     with open(file_path, 'r') as f:
         requirements = f.readlines()
 
     updated_requirements = []
+    changes_made = False
     for req in requirements:
         req = req.strip()
         if req and not req.startswith('#'):
             package_name = re.split('[=<>]', req)[0]
+            old_version = re.split('[=<>]', req)[1] if '==' in req else None
             if force or '==' not in req:
                 version = get_package_version(package_name)
-                if version:
+                if version and (force or version != old_version):
                     updated_requirements.append(f"{package_name}=={version}\n")
+                    changes_made = True
+                    if old_version:
+                        click.echo(f"  {package_name}: {old_version} -> {version}")
+                    else:
+                        click.echo(f"  {package_name}: added version {version}")
                 else:
                     updated_requirements.append(req + '\n')
             else:
@@ -45,14 +53,19 @@ def process_requirements_file(file_path, force=False, no_backups=False):
         else:
             updated_requirements.append(req + '\n')
 
-    if not no_backups:
-        # Create backup
-        backup_path = file_path.with_suffix(file_path.suffix + '.bak')
-        shutil.copy2(file_path, backup_path)
+    if changes_made:
+        if not no_backups:
+            # Create backup
+            backup_path = file_path.with_suffix(file_path.suffix + '.bak')
+            shutil.copy2(file_path, backup_path)
+            click.echo(f"  Backup created: {backup_path}")
 
-    # Write updated requirements
-    with open(file_path, 'w') as f:
-        f.writelines(updated_requirements)
+        # Write updated requirements
+        with open(file_path, 'w') as f:
+            f.writelines(updated_requirements)
+        click.echo(f"  Updated {file_path}")
+    else:
+        click.echo("  No changes were necessary.")
 
 @click.command()
 @click.option('--force', is_flag=True, help='Force update of all package versions')
@@ -69,9 +82,7 @@ def main(force, no_backups, files):
             return
 
     for file in files:
-        click.echo(f"Processing {file}...")
         process_requirements_file(Path(file), force, no_backups)
-        click.echo(f"Updated {file}")
 
 if __name__ == '__main__':
     main()
