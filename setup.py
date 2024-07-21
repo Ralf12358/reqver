@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='reqver',
-    version='0.1.2',
+    version='0.1.3',
     author='Ralf Schneider',
     author_email='ralf.schneider@example.com',
     description='A tool to add version information to requirements.txt files',

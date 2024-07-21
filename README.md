@@ -1,4 +1,4 @@
-# reqver# reqver
+# reqver
 
 A command-line tool to add version information to requirements.txt files.
 
@@ -12,6 +12,8 @@ For more information, please refer to the documentation.
 # reqver
 
 [![PyPI version](https://badge.fury.io/py/reqver.svg)](https://badge.fury.io/py/reqver)
+
+**Latest version: 0.1.3**
 
 A command-line tool to add version information to requirements.txt files.
 
