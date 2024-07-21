@@ -35,9 +35,11 @@ def process_requirements_file(file_path, force=False, no_backups=False):
     for req in requirements:
         req = req.strip()
         if req and not req.startswith('#'):
-            package_name = re.split('[=<>]', req)[0]
-            old_version = re.split('[=<>]', req)[1] if '==' in req else None
+            splitted = re.split(r'==|>=|<=|<|>', req)
+            package_name = splitted[0].strip()
+            old_version = splitted[1].strip() if len(splitted) > 1 else None
             version = get_package_version(package_name)
+            print(f"package_name: {package_name} old_version: {old_version} version: {version}")
             if version:
                 if old_version is None or (force and version != old_version):
                     updated_requirements.append(f"{package_name}=={version}\n")
