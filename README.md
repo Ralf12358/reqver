@@ -87,7 +87,7 @@ To upload a new version of this package to PyPI:
 1. Update the version number in `setup.py`.
 2. Build the package:
    ```
-   python setup.py sdist bdist_wheel
+   python setup.py sdist
    ```
 3. Upload to TestPyPI (optional):
    ```
