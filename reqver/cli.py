@@ -4,6 +4,8 @@ import re
 import subprocess
 import shutil
 from pathlib import Path
+from packaging import version
+from packaging.specifiers import SpecifierSet
 
 def find_requirements_file():
     current_dir = Path.cwd()
@@ -35,25 +37,31 @@ def process_requirements_file(file_path, force=False, no_backups=False):
     for req in requirements:
         req = req.strip()
         if req and not req.startswith('#'):
-            splitted = re.split(r'==|>=|<=|<|>', req)
-            package_name = splitted[0].strip()
-            old_version = splitted[1].strip() if len(splitted) > 1 else None
-            version = get_package_version(package_name)
-            print(f"package_name: {package_name} old_version: {old_version} version: {version}")
-            if version:
-                if old_version is None or (force and version != old_version):
-                    updated_requirements.append(f"{package_name}=={version}\n")
-                    changes_made = True
-                    if old_version:
-                        click.echo(f"  {package_name}: {old_version} -> {version}")
+            match = re.match(r'^([^=<>]+)\s*(==|>=|<=|<|>)?\s*(.*)$', req)
+            if match:
+                package_name, operator, old_version = match.groups()
+                package_name = package_name.strip()
+                current_version = get_package_version(package_name)
+                if current_version:
+                    if old_version and operator:
+                        specifier = SpecifierSet(f"{operator}{old_version}")
+                        if force and not specifier.contains(current_version):
+                            updated_req = f"{package_name}=={current_version}\n"
+                            changes_made = True
+                            click.echo(f"  {package_name}: {old_version} -> {current_version}")
+                        else:
+                            updated_req = f"{req}\n"
                     else:
-                        click.echo(f"  {package_name}: added version {version}")
+                        updated_req = f"{package_name}=={current_version}\n"
+                        changes_made = True
+                        click.echo(f"  {package_name}: added version {current_version}")
+                    updated_requirements.append(updated_req)
                 else:
-                    updated_requirements.append(req + '\n')
+                    updated_requirements.append(f"{req}\n")
             else:
-                updated_requirements.append(req + '\n')
+                updated_requirements.append(f"{req}\n")
         else:
-            updated_requirements.append(req + '\n')
+            updated_requirements.append(f"{req}\n")
 
     if changes_made:
         if not no_backups:

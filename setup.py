@@ -14,6 +14,7 @@ setup(
     install_requires=[
         'Click>=8.0.1',
         'pip>=21.1.3',
+        'packaging>=20.0',
     ],
     entry_points={
         'console_scripts': [
