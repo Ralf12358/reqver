@@ -79,3 +79,26 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Uploading to PyPI
+
+To upload a new version of this package to PyPI:
+
+1. Update the version number in `setup.py`.
+2. Build the package:
+   ```
+   python setup.py sdist bdist_wheel
+   ```
+3. Upload to TestPyPI (optional):
+   ```
+   twine upload --repository testpypi dist/*
+   ```
+4. Upload to PyPI:
+   ```
+   twine upload dist/*
+   ```
+
+Make sure you have the latest versions of setuptools, wheel, and twine installed before building and uploading:
+```
+pip install --upgrade setuptools wheel twine
+```
