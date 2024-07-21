@@ -102,3 +102,21 @@ Make sure you have the latest versions of setuptools, wheel, and twine installed
 ```
 pip install --upgrade setuptools wheel twine
 ```
+
+## Running Tests
+
+To run the tests for this project, follow these steps:
+
+1. Ensure you have the necessary dependencies installed:
+   ```
+   pip install -r requirements.txt
+   ```
+
+2. Navigate to the root directory of the project.
+
+3. Run the tests using Python's unittest module:
+   ```
+   python -m unittest discover tests
+   ```
+
+This will discover and run all the tests in the `tests` directory.
