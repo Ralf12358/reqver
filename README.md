@@ -13,7 +13,7 @@ For more information, please refer to the documentation.
 
 [![PyPI version](https://badge.fury.io/py/reqver.svg)](https://badge.fury.io/py/reqver)
 
-**Latest version: 0.1.4**
+**Latest version: 0.1.6**
 
 A command-line tool to add version information to requirements.txt files.
 
@@ -104,7 +104,7 @@ This will discover and run all the tests in the `tests` directory.
 
 To upload a new version of this package to PyPI:
 
-1. Update the version number in `setup.py`.
+1. Update the version number in `setup.py` and `reqver/__init__.py`.
 2. Build the package:
    ```
    python setup.py sdist
