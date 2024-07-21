@@ -4,7 +4,7 @@ import tempfile
 import unittest
 from pathlib import Path
 from click.testing import CliRunner
-from reqver.cli import main
+from reqver.cli import main, get_package_version
 
 class TestReqver(unittest.TestCase):
     def setUp(self):
@@ -33,7 +33,8 @@ class TestReqver(unittest.TestCase):
             with open('requirements.txt', 'r') as f:
                 content = f.read()
                 self.assertIn('click==', content)
-                self.assertIn('pip==21.1.3', content)
+                current_pip_version = get_package_version('pip')
+                self.assertIn(f'pip=={current_pip_version}', content)
 
     def test_reqver_with_file(self):
         runner = CliRunner()
@@ -44,7 +45,8 @@ class TestReqver(unittest.TestCase):
         with open(Path(self.test_dir) / 'testdata' / 'requirements.txt', 'r') as f:
             content = f.read()
             self.assertIn('click==', content)
-            self.assertIn('pip==21.1.3', content)
+            current_pip_version = get_package_version('pip')
+            self.assertIn(f'pip=={current_pip_version}', content)
 
     def test_reqver_force(self):
         runner = CliRunner()
