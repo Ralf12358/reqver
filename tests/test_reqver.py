@@ -10,22 +10,22 @@ class TestReqver(unittest.TestCase):
         # Create a temporary directory
         self.test_dir = tempfile.mkdtemp()
 
-        # remove the backup file from the previous test
-        (Path(self.test_dir) / 'requirements.txt.bak').unlink(missing_ok=True)
-
-
-        # Copy the testdata to the temporary directory
-        self.testdata_dir = Path(__file__).parent / 'testdata'
-        shutil.copytree(self.testdata_dir, self.test_dir, dirs_exist_ok=True)
-
         # Set up the CLI runner
         self.runner = CliRunner()
+
+        # Set up the testdata directory path
+        self.testdata_dir = Path(__file__).parent / 'testdata'
+
+    def copy_testdata(self):
+        # Copy the testdata to the temporary directory
+        shutil.copytree(self.testdata_dir, self.test_dir, dirs_exist_ok=True)
 
     def tearDown(self):
         # Remove the temporary directory after the test
         shutil.rmtree(self.test_dir)
 
     def test_basic_functionality(self):
+        self.copy_testdata()
         result = self.runner.invoke(main, [str(Path(self.test_dir) / 'requirements.txt')])
         self.assertEqual(result.exit_code, 0)
         self.assertIn("Processing", result.output)
@@ -42,6 +42,7 @@ class TestReqver(unittest.TestCase):
             self.assertIn(f'packaging=={get_package_version("packaging")}', content)
 
     def test_force_option(self):
+        self.copy_testdata()
         result = self.runner.invoke(main, ['--force', str(Path(self.test_dir) / 'requirements.txt')])
         self.assertEqual(result.exit_code, 0)
         self.assertIn("Processing", result.output)
@@ -55,6 +56,7 @@ class TestReqver(unittest.TestCase):
             self.assertIn(f'packaging=={get_package_version("packaging")}', content)
 
     def test_no_backups_option(self):
+        self.copy_testdata()
         result = self.runner.invoke(main, ['--no-backups', str(Path(self.test_dir) / 'requirements.txt')])
         self.assertEqual(result.exit_code, 0)
         self.assertIn("Processing", result.output)
@@ -76,6 +78,7 @@ class TestReqver(unittest.TestCase):
         self.assertFalse((Path(self.test_dir) / 'requirements.txt.bak').exists())
 
     def test_multiple_files(self):
+        self.copy_testdata()
         # Create a second requirements file
         shutil.copy(Path(self.test_dir) / 'requirements.txt', Path(self.test_dir) / 'requirements2.txt')
 
@@ -90,6 +93,7 @@ class TestReqver(unittest.TestCase):
         self.assertIn("requirements2.txt", result.output)
 
     def test_no_changes_needed(self):
+        self.copy_testdata()
         # First, update the requirements file
         self.runner.invoke(main, [str(Path(self.test_dir) / 'requirements.txt')])
 
@@ -99,6 +103,7 @@ class TestReqver(unittest.TestCase):
         self.assertIn("No changes were necessary", result.output)
 
     def test_file_not_found(self):
+        self.copy_testdata()
         result = self.runner.invoke(main, ['nonexistent_file.txt'])
         self.assertNotEqual(result.exit_code, 0)
         self.assertIn("Error", result.output)
