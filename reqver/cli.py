@@ -25,7 +25,7 @@ def get_package_version(package_name):
         pass
     return None
 
-def process_requirements_file(file_path, force=False):
+def process_requirements_file(file_path, force=False, no_backups=False):
     with open(file_path, 'r') as f:
         requirements = f.readlines()
 
@@ -45,9 +45,10 @@ def process_requirements_file(file_path, force=False):
         else:
             updated_requirements.append(req + '\n')
 
-    # Create backup
-    backup_path = file_path.with_suffix(file_path.suffix + '.bak')
-    shutil.copy2(file_path, backup_path)
+    if not no_backups:
+        # Create backup
+        backup_path = file_path.with_suffix(file_path.suffix + '.bak')
+        shutil.copy2(file_path, backup_path)
 
     # Write updated requirements
     with open(file_path, 'w') as f:
@@ -55,8 +56,9 @@ def process_requirements_file(file_path, force=False):
 
 @click.command()
 @click.option('--force', is_flag=True, help='Force update of all package versions')
+@click.option('--no-backups', is_flag=True, help='Do not create backup files')
 @click.argument('files', nargs=-1, type=click.Path(exists=True))
-def main(force, files):
+def main(force, no_backups, files):
     """Add version information to requirements.txt files."""
     if not files:
         req_file = find_requirements_file()
@@ -68,7 +70,7 @@ def main(force, files):
 
     for file in files:
         click.echo(f"Processing {file}...")
-        process_requirements_file(Path(file), force)
+        process_requirements_file(Path(file), force, no_backups)
         click.echo(f"Updated {file}")
 
 if __name__ == '__main__':

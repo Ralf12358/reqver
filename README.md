@@ -30,6 +30,7 @@ If no files are given, reqver looks for requirements.txt in the current director
 ### Options:
 
 - `--force`: Force update of all package versions, even if they already have version information.
+- `--no-backups`: Do not create backup files when updating requirements files.
 
 ### Examples:
 
@@ -53,6 +54,11 @@ If no files are given, reqver looks for requirements.txt in the current director
    reqver --force requirements.txt
    ```
 
+5. Update without creating backups:
+   ```
+   reqver --no-backups requirements.txt
+   ```
+
 ## Behavior
 
 For each specified file (or the found requirements.txt):
@@ -61,5 +67,5 @@ For each specified file (or the found requirements.txt):
 2. For each requirement in the file:
    - If version info is present: leaves it as is, unless the `--force` option is set.
    - If no version info is present: gets the current version with pip.
-3. Creates a backup of the old requirements file.
+3. Creates a backup of the old requirements file (unless `--no-backups` is used).
 4. Writes the new requirements file with updated version information.
