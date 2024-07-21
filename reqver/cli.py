@@ -45,7 +45,8 @@ def process_requirements_file(file_path, force=False, no_backups=False):
                 print(f"  {package_name}: {current_version} (current) vs {old_version} (old)")
                 if current_version:
                     if old_version and operator:
-                        if force:
+                        specifier = SpecifierSet(f"{operator}{old_version}")
+                        if force and not specifier.contains(current_version):
                             updated_req = f"{package_name}=={current_version}\n"
                             changes_made = True
                             click.echo(f"  {package_name}: {old_version} -> {current_version}")

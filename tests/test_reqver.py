@@ -67,6 +67,11 @@ class TestReqver(unittest.TestCase):
             self.assertIn('pip==21.1.3', content)  # This should not change without --force
             self.assertIn(f'packaging=={get_package_version("packaging")}', content)
 
+        # Run the command again to ensure no backup is created on subsequent runs
+        result = self.runner.invoke(main, ['--no-backups', str(Path(self.test_dir) / 'requirements.txt')])
+        self.assertEqual(result.exit_code, 0)
+        self.assertFalse(os.path.exists(Path(self.test_dir) / 'requirements.txt.bak'))
+
     def test_multiple_files(self):
         # Create a second requirements file
         shutil.copy(Path(self.test_dir) / 'requirements.txt', Path(self.test_dir) / 'requirements2.txt')
