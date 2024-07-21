@@ -11,6 +11,8 @@ reqver <params> files
 For more information, please refer to the documentation.
 # reqver
 
+[![PyPI version](https://badge.fury.io/py/reqver.svg)](https://badge.fury.io/py/reqver)
+
 A command-line tool to add version information to requirements.txt files.
 
 ## Installation
@@ -69,3 +71,11 @@ For each specified file (or the found requirements.txt):
    - If no version info is present: gets the current version with pip.
 3. Creates a backup of the old requirements file (unless `--no-backups` is used).
 4. Writes the new requirements file with updated version information.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
