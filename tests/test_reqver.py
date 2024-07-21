@@ -10,11 +10,15 @@ class TestReqver(unittest.TestCase):
     def setUp(self):
         # Create a temporary directory
         self.test_dir = tempfile.mkdtemp()
-        
+
+        # remove the backup file from the previous test
+        (Path(self.test_dir) / 'requirements.txt.bak').unlink(missing_ok=True)
+
+
         # Copy the testdata to the temporary directory
         self.testdata_dir = Path(__file__).parent / 'testdata'
         shutil.copytree(self.testdata_dir, self.test_dir, dirs_exist_ok=True)
-        
+
         # Set up the CLI runner
         self.runner = CliRunner()
 
@@ -47,9 +51,9 @@ class TestReqver(unittest.TestCase):
         # Check if versions were updated, including pip
         with open(Path(self.test_dir) / 'requirements.txt', 'r') as f:
             content = f.read()
-            self.assertRegex(content, r'click==\d+\.\d+\.\d+')
-            self.assertRegex(content, r'pip==\d+\.\d+\.\d+')
-            self.assertRegex(content, r'packaging==\d+\.\d+\.\d+')
+            self.assertRegex(content, r'click>=\d+\.\d+\.\d+')
+            self.assertIn(f'pip=={get_package_version("pip")}', content)
+            self.assertIn(f'packaging=={get_package_version("packaging")}', content)
 
     def test_no_backups_option(self):
         result = self.runner.invoke(main, ['--no-backups', str(Path(self.test_dir) / 'requirements.txt')])
@@ -76,7 +80,7 @@ class TestReqver(unittest.TestCase):
         # Create a second requirements file
         shutil.copy(Path(self.test_dir) / 'requirements.txt', Path(self.test_dir) / 'requirements2.txt')
 
-        result = self.runner.invoke(main, [str(Path(self.test_dir) / 'requirements.txt'), 
+        result = self.runner.invoke(main, [str(Path(self.test_dir) / 'requirements.txt'),
                                            str(Path(self.test_dir) / 'requirements2.txt')])
         self.assertEqual(result.exit_code, 0)
         self.assertIn("Processing", result.output)
