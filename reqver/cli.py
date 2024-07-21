@@ -41,7 +41,7 @@ def process_requirements_file(file_path, force=False, no_backups=False):
                 package_name, operator, old_version = match.groups()
                 package_name = package_name.strip()
                 current_version = get_package_version(package_name)
-                print(f"  {package_name}: {current_version} (current) vs {old_version} (old)")
+                # print(f"  {package_name}: {current_version} (current) vs {old_version} (old)")
                 if current_version:
                     if old_version and operator:
                         specifier = SpecifierSet(f"{operator}{old_version}")
