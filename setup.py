@@ -3,12 +3,12 @@ from setuptools import setup, find_packages
 setup(
     name='reqver',
     version='0.1.1',
-    author='Your Name',
-    author_email='your.email@example.com',
+    author='Ralf Schneider',
+    author_email='ralf.schneider@example.com',
     description='A tool to add version information to requirements.txt files',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
-    url='https://github.com/yourusername/reqver',
+    url='https://github.com/ralfschneider/reqver',
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
@@ -35,7 +35,7 @@ setup(
     keywords='requirements version pip',
     python_requires='>=3.6',
     project_urls={
-        'Bug Reports': 'https://github.com/yourusername/reqver/issues',
-        'Source': 'https://github.com/yourusername/reqver/',
+        'Bug Reports': 'https://github.com/ralfschneider/reqver/issues',
+        'Source': 'https://github.com/ralfschneider/reqver/',
     },
 )
